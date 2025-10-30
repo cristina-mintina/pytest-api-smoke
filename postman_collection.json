@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "Simple API Smoke - httpbin",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Two quick checks: GET /get and POST /post. Replace baseUrl with target API."
+  },
+  "item": [
+    {
+      "name": "GET /get - smoke",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://httpbin.org/get",
+          "protocol": "https",
+          "host": ["httpbin","org"],
+          "path": ["get"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response has url field\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('url');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "POST /post - payload check",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"cristina\",\"role\":\"qa\"}"
+        },
+        "url": {
+          "raw": "https://httpbin.org/post",
+          "protocol": "https",
+          "host": ["httpbin","org"],
+          "path": ["post"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response json contains our name\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json.json).to.have.property('name', 'cristina');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
